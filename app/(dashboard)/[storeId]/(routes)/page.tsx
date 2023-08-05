@@ -7,19 +7,18 @@ import { formatter } from "@/lib/utils";
 import { getTotalRevenue } from "@/actions/get-total-revenue";
 import { getSalesCount } from "@/actions/get-sales-count";
 import { getStockCount } from "@/actions/get-stock-count";
+import Overview from "@/components/Overview";
+import { getGraphRevenue } from "@/actions/get-revenue";
 
 interface DashboardPageProps {
-params: {storeId: string}
+  params: { storeId: string };
 }
 
-const DashboardPage = async ({params}:DashboardPageProps) => {
-
-const totalRevenue = await getTotalRevenue(params.storeId)
-
-const salesCount = await getSalesCount(params.storeId)
-
-const stockCount = await getStockCount(params.storeId)
-
+const DashboardPage = async ({ params }: DashboardPageProps) => {
+  const totalRevenue = await getTotalRevenue(params.storeId);
+  const salesCount = await getSalesCount(params.storeId);
+  const stockCount = await getStockCount(params.storeId);
+  const graphRevenue = await getGraphRevenue(params.storeId)
 
   return (
     <div className="flex-col">
@@ -35,7 +34,9 @@ const stockCount = await getStockCount(params.storeId)
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatter.format(totalRevenue)}</div>
+              <div className="text-2xl font-bold">
+                {formatter.format(totalRevenue)}
+              </div>
             </CardContent>
           </Card>
 
@@ -61,6 +62,14 @@ const stockCount = await getStockCount(params.storeId)
             </CardContent>
           </Card>
         </div>
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <Overview data={graphRevenue} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
